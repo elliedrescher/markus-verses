@@ -301,7 +301,33 @@
     letter-spacing: 1px;
   }
   .actions-row button:disabled{ opacity: 0.45; cursor: default; }
-  .season-row{ margin-bottom: 14px; }
+  .season-row{ margin-bottom: 0; }
+  .section-title{
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 0 0 2px;
+  }
+  .section-sub{
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+  .row-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 2px;
+  }
+  .row-head .setup-label{ width: auto; margin-bottom: 0; }
+  .chip:disabled{ opacity: 0.4; cursor: default; }
+  .pool-count{
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    text-align: center;
+    margin: 14px 0 6px;
+  }
   .footnote{
     font-size: 0.7rem;
     line-height: 1.4;
@@ -485,32 +511,51 @@
   <h1>David's Men 2026 Verses</h1>
   <p class="sub">Practice matching each verse to its book, chapter, and verse.</p>
 
-  <div class="panel" id="setupPanel">
-    <div class="setup-row season-row">
-      <div class="setup-label">Season</div>
-      <div id="seasonChips" class="chip-wrap"></div>
+  <div id="setupPanel">
+    <div class="panel">
+      <div class="setup-row season-row">
+        <div class="setup-label">Season &mdash; applies to Study and Practice</div>
+        <div id="seasonChips" class="chip-wrap"></div>
+      </div>
     </div>
-    <div class="setup-row study-row">
-      <div class="setup-label">Study mode &mdash; learn one month at a time</div>
+
+    <div class="panel">
+      <h2 class="section-title">Study</h2>
+      <p class="section-sub">Learn a month&rsquo;s verses, then hide more and more of the text.</p>
       <div id="studyChips" class="chip-wrap"></div>
     </div>
-    <div class="setup-row">
-      <div class="setup-label">Months to include</div>
-      <div id="monthChips"></div>
+
+    <div class="panel">
+      <h2 class="section-title">Practice</h2>
+      <p class="section-sub">Quiz yourself on the verses you&rsquo;ve been learning.</p>
+
+      <div class="setup-row">
+        <div class="row-head">
+          <div class="setup-label">Months to include</div>
+          <span><button class="backlink" id="monthsAllBtn">All</button> &middot; <button class="backlink" id="monthsNoneBtn">None</button></span>
+        </div>
+        <div id="monthChips"></div>
+      </div>
+      <div class="setup-row" id="extraRow">
+        <div class="setup-label">Also include</div>
+        <div id="extraSeasonChips" class="chip-wrap"></div>
+      </div>
+      <div class="setup-row">
+        <div class="setup-label">Direction</div>
+        <button class="chip active" data-dir="verse-to-ref">Verse → Reference</button>
+        <button class="chip" data-dir="ref-to-verse">Reference → Verse</button>
+        <button class="chip" data-dir="ref-to-month">Reference → Month/Topic</button>
+        <div class="type-note" id="dirNote" style="display:none;">Month drills work one season at a time. Turn off the extra season to use it.</div>
+      </div>
+      <div class="setup-row">
+        <div class="setup-label">Answer style</div>
+        <button class="chip active" data-mode="choice">Multiple choice</button>
+        <button class="chip" data-mode="type">Type the reference</button>
+      </div>
+      <div class="pool-count" id="poolCount"></div>
+      <button class="startbtn" id="startBtn">Start drilling</button>
+      <button class="startbtn secondary" id="startMatchBtn">Drag &amp; drop match</button>
     </div>
-    <div class="setup-row">
-      <div class="setup-label">Direction</div>
-      <button class="chip active" data-dir="verse-to-ref">Verse → Reference</button>
-      <button class="chip" data-dir="ref-to-verse">Reference → Verse</button>
-      <button class="chip" data-dir="ref-to-month">Reference → Month/Topic</button>
-    </div>
-    <div class="setup-row">
-      <div class="setup-label">Answer style</div>
-      <button class="chip active" data-mode="choice">Multiple choice</button>
-      <button class="chip" data-mode="type">Type the reference</button>
-    </div>
-    <button class="startbtn" id="startBtn">Start drilling</button>
-    <button class="startbtn secondary" id="startMatchBtn">Drag &amp; drop match</button>
   </div>
 
   <div id="studyArea" style="display:none;">
@@ -680,6 +725,7 @@ function buildMonthChips(){
       btn.classList.toggle('active');
       if (btn.classList.contains('active')) state.months.add(m);
       else state.months.delete(m);
+      updatePoolCount();
     };
     monthChipsEl.appendChild(btn);
   });
@@ -726,6 +772,7 @@ function syncMonthChips(){
   document.querySelectorAll('#monthChips .chip').forEach(b => {
     b.classList.toggle('active', state.months.has(b.dataset.month));
   });
+  updatePoolCount();
 }
 
 function maskVerse(text, level){
@@ -835,16 +882,78 @@ function buildSeasonChips(){
   });
 }
 
+function dedupeRefs(list){
+  const seen = new Set();
+  return list.filter(v => { if (seen.has(v.ref)) return false; seen.add(v.ref); return true; });
+}
+
+// Selected months of the current season, plus any whole previous seasons turned on.
+function getPool(){
+  const base = VERSES.filter(v => state.months.has(v.month));
+  const extra = [];
+  (state.extraSeasons || new Set()).forEach(k => SEASONS[k].verses.forEach(v => extra.push(v)));
+  return dedupeRefs([...base, ...extra]);
+}
+
+// Wrong-answer choices can come from any season that's switched on.
+function distractorSource(){
+  const extra = [];
+  (state.extraSeasons || new Set()).forEach(k => SEASONS[k].verses.forEach(v => extra.push(v)));
+  return dedupeRefs([...VERSES, ...extra]);
+}
+
+function updatePoolCount(){
+  const n = getPool().length;
+  document.getElementById('poolCount').textContent = n === 1 ? '1 verse selected' : n + ' verses selected';
+  document.getElementById('startBtn').disabled = n < 2;
+  document.getElementById('startMatchBtn').disabled = n < 2;
+}
+
+function updateDirectionAvailability(){
+  const mixed = state.extraSeasons.size > 0;
+  document.querySelector('[data-dir="ref-to-month"]').disabled = mixed;
+  document.getElementById('dirNote').style.display = mixed ? 'block' : 'none';
+  if (mixed && state.direction === 'ref-to-month') {
+    state.direction = 'verse-to-ref';
+    document.querySelectorAll('[data-dir]').forEach(b => b.classList.toggle('active', b.dataset.dir === 'verse-to-ref'));
+  }
+}
+
+function buildExtraChips(){
+  const wrap = document.getElementById('extraSeasonChips');
+  wrap.innerHTML = '';
+  SEASON_ORDER.filter(k => k !== currentSeason).forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (state.extraSeasons.has(key) ? ' active' : '');
+    btn.textContent = 'All ' + SEASONS[key].label + ' verses (' + SEASONS[key].verses.length + ')';
+    btn.onclick = () => {
+      if (state.extraSeasons.has(key)) state.extraSeasons.delete(key);
+      else state.extraSeasons.add(key);
+      btn.classList.toggle('active', state.extraSeasons.has(key));
+      updateDirectionAvailability();
+      updatePoolCount();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+document.getElementById('monthsAllBtn').onclick = () => { state.months = new Set(ALL_MONTHS); syncMonthChips(); };
+document.getElementById('monthsNoneBtn').onclick = () => { state.months = new Set(); syncMonthChips(); };
+
 function setSeason(key, persist){
   applySeasonData(key);
   state.months = new Set(ALL_MONTHS);
+  state.extraSeasons = new Set();
   studyState.month = ALL_MONTHS[0];
   studyState.peek = new Set();
   buildSeasonChips();
   buildMonthChips();
   buildStudyChips();
+  buildExtraChips();
   document.querySelector('[data-dir="ref-to-month"]').textContent =
     HAS_TOPICS ? 'Reference \u2192 Month/Topic' : 'Reference \u2192 Month';
+  updateDirectionAvailability();
+  updatePoolCount();
   if (persist) { try { localStorage.setItem('dm-verses-season', key); } catch (e) {} }
 }
 
@@ -866,6 +975,9 @@ document.getElementById('studyNextBtn').onclick = () => {
 };
 document.getElementById('studyDrillBtn').onclick = () => {
   state.months = new Set([studyState.month]);
+  state.extraSeasons = new Set();
+  buildExtraChips();
+  updateDirectionAvailability();
   syncMonthChips();
   document.getElementById('studyArea').style.display = 'none';
   startQuiz();
@@ -881,8 +993,8 @@ function shuffle(arr){
 }
 
 function startQuiz(){
-  const pool = VERSES.filter(v => state.months.has(v.month));
-  if (pool.length < 2) { alert("Pick at least one month with more than one verse."); return; }
+  const pool = getPool();
+  if (pool.length < 2) { alert("Pick at least two verses to practice \u2014 choose a month or include a previous season."); return; }
   state.queue = shuffle(pool);
   state.idx = 0;
   state.score = 0;
@@ -1044,7 +1156,7 @@ function renderQuestion(){
   if (state.direction === 'verse-to-ref') {
     let html = `<div class="verse-text">${v.text}</div>` + guessToggleHTML();
     if (state.mode === 'choice') {
-      const distractors = shuffle(VERSES.filter(x => x.ref !== v.ref).map(x => x.ref));
+      const distractors = shuffle(distractorSource().filter(x => x.ref !== v.ref).map(x => x.ref));
       const uniqueDistractors = [...new Set(distractors)].slice(0, 3);
       const options = shuffle([v.ref, ...uniqueDistractors]);
       html += `<div class="options">` + options.map(opt =>
@@ -1064,7 +1176,7 @@ function renderQuestion(){
   } else if (state.direction === 'ref-to-verse') {
     let html = `<div class="card-ref">${v.ref}</div>` + guessToggleHTML();
     if (state.mode === 'choice') {
-      const distractors = shuffle(VERSES.filter(x => x.ref !== v.ref && !textsOverlap(x.text, v.text)));
+      const distractors = shuffle(distractorSource().filter(x => x.ref !== v.ref && !textsOverlap(x.text, v.text)));
       const options = shuffle([v, ...distractors.slice(0, 3)]);
       html += `<div class="options">` + options.map(opt =>
         `<button class="opt" data-answer="${escapeAttr(opt.text)}">${opt.text}</button>`
@@ -1319,8 +1431,8 @@ function showResults(){
 let matchState = { pool: [], remaining: 0, wrongRefs: new Set() };
 
 function startMatchMode(){
-  const pool = VERSES.filter(v => state.months.has(v.month));
-  if (pool.length < 2) { alert("Pick at least one month with more than one verse."); return; }
+  const pool = getPool();
+  if (pool.length < 2) { alert("Pick at least two verses to practice \u2014 choose a month or include a previous season."); return; }
 
   matchState.pool = pool;
   matchState.remaining = pool.length;
