@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8c4837"/>
+      <stop offset="1" stop-color="#4f2218"/>
+    </linearGradient>
+    <linearGradient id="pageL" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#f7f0dd"/>
+      <stop offset="1" stop-color="#e4d8b8"/>
+    </linearGradient>
+    <linearGradient id="pageR" x1="1" y1="0" x2="0" y2="0">
+      <stop offset="0" stop-color="#f7f0dd"/>
+      <stop offset="1" stop-color="#e4d8b8"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f1cf7a"/>
+      <stop offset="1" stop-color="#c9953a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f1cf7a" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#f1cf7a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <g transform="translate(512 512) scale(1.0) translate(-512 -512) translate(0 70)">
+    <circle cx="512" cy="250" r="190" fill="url(#glow)"/>
+    <!-- cross -->
+    <rect x="482" y="112" width="60" height="206" rx="12" fill="url(#gold)"/>
+    <rect x="428" y="166" width="168" height="60" rx="12" fill="url(#gold)"/>
+    <!-- book cover -->
+    <path d="M512 770 C 424 716, 290 700, 132 726 L 132 372 C 290 346, 424 362, 512 420 Z" fill="#2f130c"/>
+    <path d="M512 770 C 600 716, 734 700, 892 726 L 892 372 C 734 346, 600 362, 512 420 Z" fill="#2f130c"/>
+    <!-- pages -->
+    <path d="M512 742 C 432 692, 306 678, 166 700 L 166 350 C 306 326, 432 340, 512 394 Z" fill="url(#pageL)"/>
+    <path d="M512 742 C 592 692, 718 678, 858 700 L 858 350 C 718 326, 592 340, 512 394 Z" fill="url(#pageR)"/>
+    <!-- verse lines -->
+    <g fill="none" stroke="#8c6a4a" stroke-width="9" stroke-linecap="round" opacity="0.55">
+<path d="M222 364 C 310 344, 410 352, 468 389" />
+<path d="M222 420 C 310 400, 410 408, 468 445" />
+<path d="M222 476 C 310 456, 410 464, 468 501" />
+<path d="M222 532 C 310 512, 410 520, 468 557" />
+<path d="M222 588 C 310 568, 410 576, 468 613" />
+<path d="M222 644 C 310 624, 410 632, 468 669" />
+<path d="M802 364 C 714 344, 614 352, 556 389" />
+<path d="M802 420 C 714 400, 614 408, 556 445" />
+<path d="M802 476 C 714 456, 614 464, 556 501" />
+<path d="M802 532 C 714 512, 614 520, 556 557" />
+<path d="M802 588 C 714 568, 614 576, 556 613" />
+<path d="M802 644 C 714 624, 614 632, 556 669" />
+    </g>
+    <!-- spine -->
+    <path d="M512 394 L512 742" stroke="#b9a37a" stroke-width="6" opacity="0.8"/>
+    <!-- bookmark ribbon -->
+    <path d="M590 372 L650 384 L650 500 L620 474 L590 496 Z" fill="#b3402e"/>
+  </g>
+</svg>

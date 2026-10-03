@@ -1,0 +1,1463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2ecdb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1c1712" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="DM Verses">
+<meta name="description" content="Memorize and practice the David's Men memory verses.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<title>David's Men 2026 Verses</title>
+<style>
+  :root{
+    --paper: #f2ecdb;
+    --paper-line: #c9bd9c;
+    --ink: #2c2416;
+    --ink-soft: #6b5f47;
+    --card: #fffdf7;
+    --accent: #7a3b2e;
+    --accent-soft: #c98a6b;
+    --good: #3f6b3a;
+    --good-bg: #e4efd9;
+    --bad: #8a2f2f;
+    --bad-bg: #f6dcdc;
+    --shadow: rgba(44,36,22,0.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper: #1c1712;
+      --paper-line: #3a3226;
+      --ink: #ece3cf;
+      --ink-soft: #b6a988;
+      --card: #262019;
+      --accent: #d99b7c;
+      --accent-soft: #8a4f38;
+      --good: #9fd18c;
+      --good-bg: #22301d;
+      --bad: #e28a8a;
+      --bad-bg: #3a1f1f;
+      --shadow: rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper: #1c1712;
+    --paper-line: #3a3226;
+    --ink: #ece3cf;
+    --ink-soft: #b6a988;
+    --card: #262019;
+    --accent: #d99b7c;
+    --accent-soft: #8a4f38;
+    --good: #9fd18c;
+    --good-bg: #22301d;
+    --bad: #e28a8a;
+    --bad-bg: #3a1f1f;
+    --shadow: rgba(0,0,0,0.5);
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html{ -webkit-text-size-adjust: 100%; }
+  button{ touch-action: manipulation; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px, transparent 27px, var(--paper-line) 27px, var(--paper-line) 28px
+    );
+    color: var(--ink);
+    font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    padding: 28px 14px calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+  .wrap{
+    width: 100%;
+    max-width: 640px;
+  }
+  h1{
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    margin: 0 0 2px;
+    color: var(--accent);
+  }
+  .sub{
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin: 0 0 20px;
+  }
+
+  .panel{
+    background: var(--card);
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+
+  .setup-row{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .setup-row:last-child{ margin-bottom: 0; }
+  .setup-label{
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    width: 100%;
+    margin-bottom: 2px;
+  }
+  .chip{
+    border: 1px solid var(--paper-line);
+    background: transparent;
+    color: var(--ink);
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .chip.active{
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--card);
+  }
+
+  #monthChips{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .startbtn.secondary{
+    background: transparent;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    margin-top: 8px;
+  }
+
+  .backlink{
+    background: none;
+    border: none;
+    color: var(--accent);
+    font-family: inherit;
+    font-size: 0.82rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 8px 4px;
+  }
+
+  .match-card{
+    background: var(--card);
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+  .match-verse-text{
+    font-size: 1.02rem;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .drop-zone{
+    border: 2px dashed var(--paper-line);
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    text-align: center;
+    min-height: 22px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .drop-zone.filled{
+    border-style: solid;
+    border-color: var(--good);
+    background: var(--good-bg);
+    color: var(--good);
+    font-weight: 600;
+  }
+  .drop-zone.wrong-flash{
+    border-color: var(--bad);
+    background: var(--bad-bg);
+  }
+  .drop-zone.hover-target{
+    border-color: var(--accent);
+    background: var(--paper);
+  }
+
+  .chip-tray-panel{
+    position: sticky;
+    bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    margin-top: 14px;
+  }
+  .chip-tray{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+    touch-action: none;
+  }
+  .ref-chip{
+    background: var(--accent);
+    color: var(--card);
+    padding: 9px 14px;
+    border-radius: 999px;
+    font-size: 0.88rem;
+    font-family: inherit;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    white-space: nowrap;
+  }
+  .ref-chip.dragging{
+    position: fixed;
+    z-index: 999;
+    opacity: 0.9;
+    box-shadow: 0 4px 12px var(--shadow);
+    pointer-events: none;
+  }
+  .ref-chip.placed{
+    display: none;
+  }
+
+  .match-complete{
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .startbtn{
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: var(--card);
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .startbtn:disabled{ opacity: 0.5; }
+
+  .chip-wrap{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+  .study-row{
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px dashed var(--paper-line);
+  }
+  .study-card{
+    background: var(--card);
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+  .study-ref{
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .study-text{
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  .study-text.hidden-text{
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+  .study-text .blank{
+    color: var(--accent);
+    letter-spacing: 1px;
+  }
+  .actions-row button:disabled{ opacity: 0.45; cursor: default; }
+  .season-row{ margin-bottom: 14px; }
+  .footnote{
+    font-size: 0.7rem;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    text-align: center;
+    margin: 22px 8px 0;
+  }
+  .type-note{
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+
+  #quizArea{ display: none; }
+
+  .progress{
+    display:flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+
+  .card-ref{
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-soft);
+    margin-bottom: 8px;
+  }
+  .verse-text{
+    font-size: 1.12rem;
+    line-height: 1.55;
+    margin-bottom: 4px;
+  }
+  .category-tag{
+    display:inline-block;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    border: 1px solid var(--paper-line);
+    padding: 2px 8px;
+    border-radius: 999px;
+    margin-top: 10px;
+  }
+
+  .guess-label{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 12px;
+    font-size: 0.86rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .guess-label input{
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  .options{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .opt{
+    text-align: left;
+    padding: 12px 14px;
+    border: 1px solid var(--paper-line);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.98rem;
+    cursor: pointer;
+  }
+  .opt:disabled{ cursor: default; }
+  .opt.correct{ background: var(--good-bg); border-color: var(--good); color: var(--good); font-weight: 600; }
+  .opt.wrong{ background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+
+  .type-row{
+    margin-top: 14px;
+    display: flex;
+    gap: 8px;
+  }
+  .type-row input{
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    background: var(--card);
+    color: var(--ink);
+  }
+  .type-row button{
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    background: var(--accent);
+    color: var(--card);
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+
+  .feedback{
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-size: 0.92rem;
+    display: none;
+  }
+  .feedback.show{ display: block; }
+  .feedback.good{ background: var(--good-bg); color: var(--good); }
+  .feedback.bad{ background: var(--bad-bg); color: var(--bad); }
+
+  .nextbtn{
+    margin-top: 12px;
+    width: 100%;
+    padding: 11px;
+    background: var(--ink);
+    color: var(--card);
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: none;
+  }
+  .nextbtn.show{ display: block; }
+
+  .results{
+    text-align: center;
+  }
+  .results .score{
+    font-size: 2.4rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 6px 0;
+  }
+  .miss-list{
+    text-align: left;
+    margin-top: 14px;
+    font-size: 0.92rem;
+  }
+  .miss-list .item{
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--paper-line);
+  }
+  .miss-list .item:last-child{ border-bottom: none; }
+  .miss-ref{ color: var(--accent); font-weight: 600; }
+
+  .actions-row{
+    display:flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .actions-row button{
+    flex: 1;
+    padding: 11px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    cursor: pointer;
+    border: 1px solid var(--paper-line);
+    background: transparent;
+    color: var(--ink);
+  }
+  .actions-row button.primary{
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--card);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>David's Men 2026 Verses</h1>
+  <p class="sub">Practice matching each verse to its book, chapter, and verse.</p>
+
+  <div class="panel" id="setupPanel">
+    <div class="setup-row season-row">
+      <div class="setup-label">Season</div>
+      <div id="seasonChips" class="chip-wrap"></div>
+    </div>
+    <div class="setup-row study-row">
+      <div class="setup-label">Study mode &mdash; learn one month at a time</div>
+      <div id="studyChips" class="chip-wrap"></div>
+    </div>
+    <div class="setup-row">
+      <div class="setup-label">Months to include</div>
+      <div id="monthChips"></div>
+    </div>
+    <div class="setup-row">
+      <div class="setup-label">Direction</div>
+      <button class="chip active" data-dir="verse-to-ref">Verse → Reference</button>
+      <button class="chip" data-dir="ref-to-verse">Reference → Verse</button>
+      <button class="chip" data-dir="ref-to-month">Reference → Month/Topic</button>
+    </div>
+    <div class="setup-row">
+      <div class="setup-label">Answer style</div>
+      <button class="chip active" data-mode="choice">Multiple choice</button>
+      <button class="chip" data-mode="type">Type the reference</button>
+    </div>
+    <button class="startbtn" id="startBtn">Start drilling</button>
+    <button class="startbtn secondary" id="startMatchBtn">Drag &amp; drop match</button>
+  </div>
+
+  <div id="studyArea" style="display:none;">
+    <div class="progress">
+      <button class="backlink" id="studyHomeBtn">&larr; Home</button>
+      <span id="studyTitle"></span>
+    </div>
+    <div class="panel">
+      <div class="setup-row">
+        <div class="setup-label">Difficulty &mdash; tap a verse to peek at the full text</div>
+        <div id="studyLevels" class="chip-wrap"></div>
+      </div>
+    </div>
+    <div id="studyCards"></div>
+    <button class="startbtn" id="studyDrillBtn">Drill this month</button>
+    <div class="actions-row">
+      <button id="studyPrevBtn">&lsaquo; Previous month</button>
+      <button id="studyNextBtn">Next month &rsaquo;</button>
+    </div>
+  </div>
+
+  <div id="quizArea">
+    <div class="progress">
+      <button class="backlink" id="quizHomeBtn">&larr; Home</button>
+      <span id="progressText"></span>
+      <span id="scoreText"></span>
+    </div>
+    <div class="panel" id="questionPanel"></div>
+  </div>
+
+  <div id="matchArea" style="display:none;">
+    <div class="progress">
+      <span id="matchProgressText"></span>
+      <button class="backlink" id="matchBackBtn">&larr; Home</button>
+    </div>
+    <div id="matchCards"></div>
+    <div class="panel chip-tray-panel">
+      <div class="setup-label">Drag onto the matching verse</div>
+      <div id="chipTray" class="chip-tray"></div>
+    </div>
+  </div>
+
+  <div class="panel results" id="resultsPanel" style="display:none;"></div>
+
+  <p class="footnote">Scripture quotations are from the ESV&reg; Bible (The Holy Bible, English Standard Version&reg;), &copy; 2001 by Crossway, a publishing ministry of Good News Publishers. Used by permission. All rights reserved.</p>
+</div>
+
+<script>
+// ---- Verse data, by season ----
+const VERSES_2025_26 = [
+  {month:"October", category:"Spiritual Warfare", ref:"1 Peter 5:8", text:"Be sober-minded, be watchful. Your adversary the devil prowls around like a roaring lion, seeking someone to devour."},
+  {month:"October", category:"Spiritual Warfare", ref:"James 5:16", text:"Therefore, confess your sins to one another and pray for one another, that you may be healed. The prayer of a righteous person has great power as it is working."},
+  {month:"October", category:"Spiritual Warfare", ref:"James 4:7-8", text:"Submit yourselves therefore to God. Resist the devil, and he will flee from you. Draw near to God, and he will draw near to you. Cleanse your hands, you sinners, and purify your hearts, you double-minded."},
+  {month:"October", category:"Spiritual Warfare", ref:"1 Corinthians 10:13", text:"No temptation has overtaken you that is not common to man. God is faithful, and he will not let you be tempted beyond your ability, but with the temptation he will also provide the way of escape, that you may be able to endure it."},
+  {month:"October", category:"Spiritual Warfare", ref:"Ephesians 6:11-12", text:"Put on the whole armor of God, that you may be able to stand against the schemes of the devil. For we do not wrestle against flesh and blood, but against the rulers, against the authorities, against the cosmic powers over this present darkness, against the spiritual forces of evil in the heavenly places."},
+
+  {month:"November", category:"Prayer", ref:"John 15:7", text:"If you abide in me, and my words abide in you, ask whatever you wish, and it will be done for you."},
+  {month:"November", category:"Prayer", ref:"1 Thessalonians 5:16-18", text:"Rejoice always, pray without ceasing, give thanks in all circumstances; for this is the will of God in Christ Jesus for you."},
+  {month:"November", category:"Prayer", ref:"Philippians 4:6-7", text:"Do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be made known to God. And the peace of God, which surpasses all understanding, will guard your hearts and minds in Christ Jesus."},
+
+  {month:"December", category:"Generosity", ref:"2 Corinthians 9:6-7", text:"The point is this: whoever sows sparingly will also reap sparingly, and whoever sows bountifully will also reap bountifully. Each one must give as he has decided in his heart, not reluctantly or under compulsion, for God loves a cheerful giver."},
+  {month:"December", category:"Generosity", ref:"Matthew 6:19-21", text:"Do not lay up for yourselves treasures on earth, where moth and rust destroy and where thieves break in and steal, but lay up for yourselves treasures in heaven, where neither moth nor rust destroys and where thieves do not break in and steal. For where your treasure is, there your heart will be also."},
+  {month:"December", category:"Generosity", ref:"Deuteronomy 8:17-18", text:"Beware lest you say in your heart, 'My power and the might of my hand have gotten me this wealth.' You shall remember the Lord your God, for it is he who gives you power to get wealth."},
+
+  {month:"January", category:"Community", ref:"Hebrews 10:24-25", text:"And let us consider how to stir up one another to love and good works, not neglecting to meet together, as is the habit of some, but encouraging one another, and all the more as you see the Day drawing near."},
+  {month:"January", category:"Community", ref:"Galatians 2:20", text:"I have been crucified with Christ. It is no longer I who live but Christ who lives in me. And the life I now live in the flesh I live by faith in the Son of God, who loved me and gave himself for me."},
+  {month:"January", category:"Community", ref:"John 15:12-13", text:"This is my commandment, that you love one another as I have loved you. Greater love has no one than this, that someone lay down his life for his friends."},
+
+  {month:"February", category:"Marriage", ref:"Ephesians 5:28", text:"In the same way husbands should love their wives as their own bodies. He who loves his wife loves himself."},
+  {month:"February", category:"Marriage", ref:"1 Corinthians 13:4-7", text:"Love is patient and kind; love does not envy or boast; it is not arrogant or rude. It does not insist on its own way; it is not irritable or resentful; it does not rejoice at wrongdoing, but rejoices with the truth. Love bears all things, believes all things, hopes all things, endures all things."},
+  {month:"February", category:"Marriage", ref:"Proverbs 4:23", text:"Keep your heart with all vigilance, for from it flow the springs of life."},
+
+  {month:"March", category:"Work", ref:"1 Corinthians 15:58", text:"Therefore, my beloved brothers, be steadfast, immovable, always abounding in the work of the Lord, knowing that in the Lord your labor is not in vain."},
+  {month:"March", category:"Work", ref:"Colossians 3:23", text:"Whatever you do, work heartily, as for the Lord and not for men."},
+  {month:"March", category:"Work", ref:"Acts 1:8", text:"But you will receive power when the Holy Spirit has come upon you, and you will be my witnesses in Jerusalem and in all Judea and Samaria, and to the end of the earth."},
+
+  {month:"April", category:"Spiritual Leadership", ref:"Micah 6:8", text:"He has told you, O man, what is good; and what does the Lord require of you but to do justice, and to love kindness, and to walk humbly with your God?"},
+  {month:"April", category:"Spiritual Leadership", ref:"1 Corinthians 16:13", text:"Be watchful, stand firm in the faith, act like men, be strong."},
+  {month:"April", category:"Spiritual Leadership", ref:"2 Timothy 2:2", text:"...and what you have heard from me in the presence of many witnesses entrust to faithful men, who will be able to teach others also."},
+  {month:"April", category:"Spiritual Leadership", ref:"Mark 10:45", text:"For even the Son of Man came not to be served but to serve, and to give his life as a ransom for many."},
+];
+
+const VERSES_2026_27 = [
+  {month:"September", category:"", ref:"Psalm 119:11", text:"I have stored up your word in my heart, that I might not sin against you."},
+  {month:"September", category:"", ref:"Psalm 1:1", text:"Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers;"},
+  {month:"October", category:"", ref:"Psalm 32:1-2", text:"A Maskil of David. Blessed is the one whose transgression is forgiven, whose sin is covered. Blessed is the man against whom the LORD counts no iniquity, and in whose spirit there is no deceit."},
+  {month:"October", category:"", ref:"James 5:16", text:"Therefore, confess your sins to one another and pray for one another, that you may be healed. The prayer of a righteous person has great power as it is working."},
+  {month:"October", category:"", ref:"1 Peter 5:8", text:"Be sober-minded; be watchful. Your adversary the devil prowls around like a roaring lion, seeking someone to devour."},
+  {month:"November", category:"", ref:"Psalm 1:1-2", text:"Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers; but his delight is in the law of the LORD, and on his law he meditates day and night."},
+  {month:"November", category:"", ref:"John 15:7", text:"If you abide in me, and my words abide in you, ask whatever you wish, and it will be done for you."},
+  {month:"November", category:"", ref:"Philippians 4:6-7", text:"do not be anxious about anything, but in everything by prayer and supplication with thanksgiving let your requests be made known to God. And the peace of God, which surpasses all understanding, will guard your hearts and your minds in Christ Jesus."},
+  {month:"November", category:"", ref:"1 Thessalonians 5:16-18", text:"Rejoice always, pray without ceasing, give thanks in all circumstances; for this is the will of God in Christ Jesus for you."},
+  {month:"November", category:"", ref:"Psalm 1:1-3", text:"Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers; but his delight is in the law of the LORD, and on his law he meditates day and night. He is like a tree planted by streams of water that yields its fruit in its season, and its leaf does not wither. In all that he does, he prospers."},
+  {month:"December", category:"", ref:"John 14:6", text:"Jesus said to him, “I am the way, and the truth, and the life. No one comes to the Father except through me."},
+  {month:"December", category:"", ref:"Luke 9:23", text:"And he said to all, “If anyone would come after me, let him deny himself and take up his cross daily and follow me."},
+  {month:"December", category:"", ref:"Psalm 1:1-4", text:"Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers; but his delight is in the law of the LORD, and on his law he meditates day and night. He is like a tree planted by streams of water that yields its fruit in its season, and its leaf does not wither. In all that he does, he prospers. The wicked are not so, but are like chaff that the wind drives away."},
+  {month:"January", category:"", ref:"Romans 12:2", text:"Do not be conformed to this world, but be transformed by the renewal of your mind, that by testing you may discern what is the will of God, what is good and acceptable and perfect."},
+  {month:"January", category:"", ref:"2 Corinthians 10:5", text:"We destroy arguments and every lofty opinion raised against the knowledge of God, and take every thought captive to obey Christ,"},
+  {month:"January", category:"", ref:"Philippians 4:8", text:"Finally, brothers, whatever is true, whatever is honorable, whatever is just, whatever is pure, whatever is lovely, whatever is commendable, if there is any excellence, if there is anything worthy of praise, think about these things."},
+  {month:"February", category:"", ref:"Psalm 1:1-5", text:"Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers; but his delight is in the law of the LORD, and on his law he meditates day and night. He is like a tree planted by streams of water that yields its fruit in its season, and its leaf does not wither. In all that he does, he prospers. The wicked are not so, but are like chaff that the wind drives away. Therefore the wicked will not stand in the judgment, nor sinners in the congregation of the righteous;"},
+  {month:"February", category:"", ref:"Proverbs 17:27", text:"Whoever restrains his words has knowledge, and he who has a cool spirit is a man of understanding."},
+  {month:"February", category:"", ref:"Ephesians 5:25", text:"Husbands, love your wives, as Christ loved the church and gave himself up for her,"},
+  {month:"February", category:"", ref:"1 Corinthians 13:4-8", text:"Love is patient and kind; love does not envy or boast; it is not arrogant or rude. It does not insist on its own way; it is not irritable or resentful; it does not rejoice at wrongdoing, but rejoices with the truth. Love bears all things, believes all things, hopes all things, endures all things. Love never ends. As for prophecies, they will pass away; as for tongues, they will cease; as for knowledge, it will pass away."},
+  {month:"March", category:"", ref:"Psalm 1:1-6", text:"Blessed is the man who walks not in the counsel of the wicked, nor stands in the way of sinners, nor sits in the seat of scoffers; but his delight is in the law of the LORD, and on his law he meditates day and night. He is like a tree planted by streams of water that yields its fruit in its season, and its leaf does not wither. In all that he does, he prospers. The wicked are not so, but are like chaff that the wind drives away. Therefore the wicked will not stand in the judgment, nor sinners in the congregation of the righteous; for the LORD knows the way of the righteous, but the way of the wicked will perish."},
+  {month:"March", category:"", ref:"Psalm 127:1", text:"A Song of Ascents. Of Solomon. Unless the LORD builds the house, those who build it labor in vain. Unless the LORD watches over the city, the watchman stays awake in vain."},
+  {month:"March", category:"", ref:"Colossians 3:23-24", text:"Whatever you do, work heartily, as for the Lord and not for men, knowing that from the Lord you will receive the inheritance as your reward. You are serving the Lord Christ."},
+  {month:"March", category:"", ref:"Micah 6:8", text:"He has told you, O man, what is good; and what does the LORD require of you but to do justice, and to love kindness, and to walk humbly with your God?"},
+  {month:"April", category:"", ref:"Mark 10:45", text:"For even the Son of Man came not to be served but to serve, and to give his life as a ransom for many.”"},
+  {month:"April", category:"", ref:"2 Timothy 2:2", text:"and what you have heard from me in the presence of many witnesses entrust to faithful men, who will be able to teach others also."},
+  {month:"April", category:"", ref:"1 Peter 1:15-16", text:"but as he who called you is holy, you also be holy in all your conduct, since it is written, “You shall be holy, for I am holy.”"},
+];
+
+const SEASONS = {
+  "2026-27": {
+    label: "2026\u201327",
+    months: ["September","October","November","December","January","February","March","April"],
+    verses: VERSES_2026_27
+  },
+  "2025-26": {
+    label: "2025\u201326",
+    months: ["October","November","December","January","February","March","April"],
+    verses: VERSES_2025_26
+  }
+};
+const SEASON_ORDER = ["2026-27", "2025-26"];
+
+let currentSeason = SEASON_ORDER[0];
+let VERSES = [], ALL_MONTHS = [], MONTH_CATEGORY = {}, MONTH_PAIRS = [], HAS_TOPICS = false;
+
+function applySeasonData(key){
+  currentSeason = key;
+  VERSES = SEASONS[key].verses;
+  ALL_MONTHS = SEASONS[key].months;
+  MONTH_CATEGORY = {};
+  VERSES.forEach(v => { MONTH_CATEGORY[v.month] = v.category || ''; });
+  HAS_TOPICS = ALL_MONTHS.some(m => MONTH_CATEGORY[m]);
+  MONTH_PAIRS = ALL_MONTHS.map(m => ({
+    month: m,
+    category: MONTH_CATEGORY[m],
+    label: MONTH_CATEGORY[m] ? m + ' \u2014 ' + MONTH_CATEGORY[m] : m
+  }));
+}
+applySeasonData(SEASON_ORDER[0]);
+
+let state = {
+  direction: "verse-to-ref",
+  mode: "choice",
+  months: new Set(ALL_MONTHS),
+  queue: [],
+  idx: 0,
+  score: 0,
+  misses: [],
+  flags: [],
+  answered: false
+};
+
+// ---- Setup screen ----
+const monthChipsEl = document.getElementById('monthChips');
+function buildMonthChips(){
+  monthChipsEl.innerHTML = '';
+  ALL_MONTHS.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'chip active';
+    btn.textContent = m;
+    btn.dataset.month = m;
+    btn.onclick = () => {
+      btn.classList.toggle('active');
+      if (btn.classList.contains('active')) state.months.add(m);
+      else state.months.delete(m);
+    };
+    monthChipsEl.appendChild(btn);
+  });
+}
+
+document.querySelectorAll('[data-dir]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('[data-dir]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.direction = btn.dataset.dir;
+  };
+});
+document.querySelectorAll('[data-mode]').forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll('[data-mode]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.mode = btn.dataset.mode;
+  };
+});
+
+document.getElementById('startBtn').onclick = startQuiz;
+document.getElementById('startMatchBtn').onclick = startMatchMode;
+function goHome(){
+  document.getElementById('studyArea').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('matchArea').style.display = 'none';
+  document.getElementById('resultsPanel').style.display = 'none';
+  document.getElementById('setupPanel').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+document.getElementById('matchBackBtn').onclick = goHome;
+document.getElementById('quizHomeBtn').onclick = goHome;
+
+
+// ---- Study mode ----
+const STUDY_LEVELS = ['Full text', 'Blanks', 'More blanks', 'First letters', 'Reference only'];
+let studyState = { month: ALL_MONTHS[0], level: 0, peek: new Set() };
+
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function syncMonthChips(){
+  document.querySelectorAll('#monthChips .chip').forEach(b => {
+    b.classList.toggle('active', state.months.has(b.dataset.month));
+  });
+}
+
+function maskVerse(text, level){
+  return text.split(/\s+/).map((w, i) => {
+    const m = w.match(/^([^A-Za-z0-9]*)(.*?)([^A-Za-z0-9]*)$/);
+    const lead = m[1], core = m[2], trail = m[3];
+    if (!core) return esc(w);
+    let hide = false;
+    if (level === 1) hide = (i % 3 === 2);
+    else if (level === 2) hide = (i % 2 === 1);
+    else if (level === 3) hide = true;
+    if (!hide) return esc(w);
+    const masked = level === 3 ? core[0] : '_'.repeat(Math.min(core.length, 10));
+    return esc(lead) + '<span class="blank">' + esc(masked) + '</span>' + esc(trail);
+  }).join(' ');
+}
+
+function paintStudyText(btn, v){
+  const level = studyState.level;
+  const peeking = studyState.peek.has(v.ref);
+  btn.classList.remove('hidden-text');
+  if (level === 0 || peeking) {
+    btn.innerHTML = esc(v.text);
+  } else if (level === 4) {
+    btn.classList.add('hidden-text');
+    btn.textContent = 'Tap to reveal';
+  } else {
+    btn.innerHTML = maskVerse(v.text, level);
+  }
+}
+
+function renderStudy(){
+  const m = studyState.month;
+  document.getElementById('studyTitle').textContent = SEASONS[currentSeason].label + ' \u00b7 ' + m + (MONTH_CATEGORY[m] ? ' \u2014 ' + MONTH_CATEGORY[m] : '');
+
+  const lv = document.getElementById('studyLevels');
+  lv.innerHTML = '';
+  STUDY_LEVELS.forEach((label, i) => {
+    const b = document.createElement('button');
+    b.className = 'chip' + (i === studyState.level ? ' active' : '');
+    b.textContent = label;
+    b.onclick = () => { studyState.level = i; studyState.peek = new Set(); renderStudy(); };
+    lv.appendChild(b);
+  });
+
+  const wrap = document.getElementById('studyCards');
+  wrap.innerHTML = '';
+  VERSES.filter(v => v.month === m).forEach(v => {
+    const card = document.createElement('div');
+    card.className = 'study-card';
+    const ref = document.createElement('div');
+    ref.className = 'study-ref';
+    ref.textContent = v.ref;
+    const btn = document.createElement('button');
+    btn.className = 'study-text';
+    paintStudyText(btn, v);
+    btn.onclick = () => {
+      if (studyState.level === 0) return;
+      if (studyState.peek.has(v.ref)) studyState.peek.delete(v.ref);
+      else studyState.peek.add(v.ref);
+      paintStudyText(btn, v);
+    };
+    card.appendChild(ref);
+    card.appendChild(btn);
+    wrap.appendChild(card);
+  });
+
+  const idx = ALL_MONTHS.indexOf(m);
+  document.getElementById('studyPrevBtn').disabled = idx <= 0;
+  document.getElementById('studyNextBtn').disabled = idx >= ALL_MONTHS.length - 1;
+}
+
+function openStudy(m){
+  studyState.month = m;
+  studyState.peek = new Set();
+  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('resultsPanel').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('matchArea').style.display = 'none';
+  document.getElementById('studyArea').style.display = 'block';
+  renderStudy();
+  window.scrollTo(0, 0);
+}
+
+const studyChipsEl = document.getElementById('studyChips');
+function buildStudyChips(){
+  studyChipsEl.innerHTML = '';
+  ALL_MONTHS.forEach(m => {
+    const btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.textContent = m;
+    btn.onclick = () => openStudy(m);
+    studyChipsEl.appendChild(btn);
+  });
+}
+
+// ---- Season switching ----
+const seasonChipsEl = document.getElementById('seasonChips');
+function buildSeasonChips(){
+  seasonChipsEl.innerHTML = '';
+  SEASON_ORDER.forEach(key => {
+    const btn = document.createElement('button');
+    btn.className = 'chip' + (key === currentSeason ? ' active' : '');
+    btn.textContent = SEASONS[key].label;
+    btn.onclick = () => setSeason(key, true);
+    seasonChipsEl.appendChild(btn);
+  });
+}
+
+function setSeason(key, persist){
+  applySeasonData(key);
+  state.months = new Set(ALL_MONTHS);
+  studyState.month = ALL_MONTHS[0];
+  studyState.peek = new Set();
+  buildSeasonChips();
+  buildMonthChips();
+  buildStudyChips();
+  document.querySelector('[data-dir="ref-to-month"]').textContent =
+    HAS_TOPICS ? 'Reference \u2192 Month/Topic' : 'Reference \u2192 Month';
+  if (persist) { try { localStorage.setItem('dm-verses-season', key); } catch (e) {} }
+}
+
+let initialSeason = SEASON_ORDER[0];
+try {
+  const saved = localStorage.getItem('dm-verses-season');
+  if (saved && SEASONS[saved]) initialSeason = saved;
+} catch (e) {}
+setSeason(initialSeason, false);
+
+document.getElementById('studyHomeBtn').onclick = goHome;
+document.getElementById('studyPrevBtn').onclick = () => {
+  const i = ALL_MONTHS.indexOf(studyState.month);
+  if (i > 0) { openStudy(ALL_MONTHS[i - 1]); }
+};
+document.getElementById('studyNextBtn').onclick = () => {
+  const i = ALL_MONTHS.indexOf(studyState.month);
+  if (i < ALL_MONTHS.length - 1) { openStudy(ALL_MONTHS[i + 1]); }
+};
+document.getElementById('studyDrillBtn').onclick = () => {
+  state.months = new Set([studyState.month]);
+  syncMonthChips();
+  document.getElementById('studyArea').style.display = 'none';
+  startQuiz();
+};
+
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(){
+  const pool = VERSES.filter(v => state.months.has(v.month));
+  if (pool.length < 2) { alert("Pick at least one month with more than one verse."); return; }
+  state.queue = shuffle(pool);
+  state.idx = 0;
+  state.score = 0;
+  state.misses = [];
+  state.flags = [];
+  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('resultsPanel').style.display = 'none';
+  document.getElementById('quizArea').style.display = 'block';
+  renderQuestion();
+}
+
+/* REF-PARSER-START */
+const BOOK_ALIASES = {
+  "Genesis":["gen","ge","gn"],
+  "Exodus":["exod","exo","ex"],
+  "Leviticus":["lev","lv"],
+  "Numbers":["num","nu","nm","nb"],
+  "Deuteronomy":["deut","dt","deu"],
+  "Joshua":["josh","jos","jsh"],
+  "Judges":["judg","jdg","jg"],
+  "Ruth":["rth","ru"],
+  "1 Samuel":["1sam","1sa","1sm"],
+  "2 Samuel":["2sam","2sa","2sm"],
+  "1 Kings":["1kgs","1ki","1kin"],
+  "2 Kings":["2kgs","2ki","2kin"],
+  "1 Chronicles":["1chron","1chr","1ch"],
+  "2 Chronicles":["2chron","2chr","2ch"],
+  "Ezra":["ezr"],
+  "Nehemiah":["neh"],
+  "Esther":["esth","est"],
+  "Job":["jb"],
+  "Psalms":["psalm","ps","psa","pss","pslm"],
+  "Proverbs":["prov","pro","prv"],
+  "Ecclesiastes":["eccl","eccles","ecc"],
+  "Song of Solomon":["songofsongs","song","sos","sng"],
+  "Isaiah":["isa"],
+  "Jeremiah":["jer"],
+  "Lamentations":["lam"],
+  "Ezekiel":["ezek","eze","ezk"],
+  "Daniel":["dan","dn"],
+  "Hosea":["hos"],
+  "Joel":["jl"],
+  "Amos":["am"],
+  "Obadiah":["obad","ob"],
+  "Jonah":["jon","jnh"],
+  "Micah":["mic"],
+  "Nahum":["nah"],
+  "Habakkuk":["hab","hb"],
+  "Zephaniah":["zeph","zep"],
+  "Haggai":["hag","hg"],
+  "Zechariah":["zech","zec"],
+  "Malachi":["mal"],
+  "Matthew":["matt","mat","mt"],
+  "Mark":["mrk","mk","mr"],
+  "Luke":["luk","lk"],
+  "John":["jhn","jn"],
+  "Acts":["act"],
+  "Romans":["rom","rm"],
+  "1 Corinthians":["1cor","1co"],
+  "2 Corinthians":["2cor","2co"],
+  "Galatians":["gal"],
+  "Ephesians":["eph","ephes"],
+  "Philippians":["phil","php"],
+  "Colossians":["col"],
+  "1 Thessalonians":["1thess","1thes","1th"],
+  "2 Thessalonians":["2thess","2thes","2th"],
+  "1 Timothy":["1tim","1ti"],
+  "2 Timothy":["2tim","2ti"],
+  "Titus":["tit"],
+  "Philemon":["philem","phm"],
+  "Hebrews":["heb"],
+  "James":["jas","jam","jm"],
+  "1 Peter":["1pet","1pe","1pt"],
+  "2 Peter":["2pet","2pe","2pt"],
+  "1 John":["1jn","1jhn","1jo"],
+  "2 John":["2jn","2jhn","2jo"],
+  "3 John":["3jn","3jhn","3jo"],
+  "Jude":["jud","jd"],
+  "Revelation":["rev","revelations"]
+};
+const BOOK_MAP = {};
+Object.keys(BOOK_ALIASES).forEach(name => {
+  BOOK_MAP[name.toLowerCase().replace(/\s+/g,'')] = name;
+  BOOK_ALIASES[name].forEach(a => { BOOK_MAP[a] = name; });
+});
+
+// Returns null if it can't be read as "book chapter:verse(-verse)"; book is null if the book name is unknown.
+function parseRef(input){
+  let s = String(input).toLowerCase().trim();
+  s = s.replace(/[\u2010-\u2015\u2212]/g, '-');            // all dash types -> hyphen
+  s = s.replace(/([a-z])\./g, '$1');                        // "1 Cor. 10" -> "1 Cor 10"
+  s = s.replace(/^(first|1st)\s*/, '1 ').replace(/^(second|2nd)\s*/, '2 ').replace(/^(third|3rd)\s*/, '3 ');
+  s = s.replace(/^(iii|ii|i)\s+/, (m, r) => ({i:'1', ii:'2', iii:'3'})[r] + ' ');
+  s = s.replace(/(\d)\s*(?:to|through|thru)\s*(\d)/g, '$1-$2');
+  s = s.replace(/\s*-\s*/g, '-');
+  s = s.replace(/\s+/g, ' ');
+  const m = s.match(/^([123])?\s*([a-z][a-z ]*?)\s*(\d{1,3})\s*(?:[:.,;]|\s)\s*(\d{1,3})(?:-(\d{1,3}))?$/);
+  if (!m) return null;
+  const key = (m[1] || '') + m[2].replace(/\s+/g, '');
+  return {
+    book: BOOK_MAP[key] || null,
+    ch: parseInt(m[3], 10),
+    v1: parseInt(m[4], 10),
+    v2: m[5] ? parseInt(m[5], 10) : null
+  };
+}
+
+function gradeRef(input, expected){
+  const exp = parseRef(expected);
+  const got = parseRef(input);
+  if (!exp) return { correct: String(input).trim().toLowerCase() === String(expected).toLowerCase(), hint: '' };
+  if (!got) return { correct: false, hint: "Couldn't read that as a reference \u2014 try a format like James 4:7-8." };
+  if (!got.book) return { correct: false, hint: "Didn't recognize that book name." };
+  const sameBook = got.book === exp.book;
+  const sameCh = sameBook && got.ch === exp.ch;
+  const sameV1 = sameCh && got.v1 === exp.v1;
+  if (sameV1 && got.v2 === exp.v2) return { correct: true, hint: '' };
+  if (sameV1) {
+    return { correct: false, hint: exp.v2
+      ? 'Right start \u2014 this passage runs through verse ' + exp.v2 + '.'
+      : 'Right verse \u2014 this one is a single verse.' };
+  }
+  if (sameCh) return { correct: false, hint: 'Right book and chapter \u2014 check the verse numbers.' };
+  if (sameBook) return { correct: false, hint: 'Right book \u2014 check the chapter and verse.' };
+  return { correct: false, hint: '' };
+}
+
+function gradeMonthTopic(input, pair){
+  const v = normalize(input);
+  if (!v) return false;
+  const month = pair.month.toLowerCase();
+  const cat = pair.category.toLowerCase();
+  const catWords = cat.split(' ').filter(w => w && w !== 'spiritual');
+  return v === month || (v.length >= 3 && month.startsWith(v)) ||
+         (cat && v === cat) || catWords.includes(v) ||
+         v === normalize(pair.label);
+}
+/* REF-PARSER-END */
+
+function textsOverlap(a, b){
+  const x = a.toLowerCase(), y = b.toLowerCase();
+  const n = Math.min(x.length, y.length);
+  return x.slice(0, n) === y.slice(0, n);
+}
+
+function normalize(s){
+  return s.toLowerCase().replace(/[.,]/g,'').replace(/\s+/g,' ').replace(/–|—/g,'-').trim();
+}
+
+function renderQuestion(){
+  state.answered = false;
+  const total = state.queue.length;
+  document.getElementById('progressText').textContent = `Card ${state.idx + 1} of ${total}`;
+  document.getElementById('scoreText').textContent = `Score: ${state.score}/${state.idx}`;
+
+  const v = state.queue[state.idx];
+  const panel = document.getElementById('questionPanel');
+
+  if (state.direction === 'verse-to-ref') {
+    let html = `<div class="verse-text">${v.text}</div>` + guessToggleHTML();
+    if (state.mode === 'choice') {
+      const distractors = shuffle(VERSES.filter(x => x.ref !== v.ref).map(x => x.ref));
+      const uniqueDistractors = [...new Set(distractors)].slice(0, 3);
+      const options = shuffle([v.ref, ...uniqueDistractors]);
+      html += `<div class="options">` + options.map(opt =>
+        `<button class="opt" data-answer="${escapeAttr(opt)}">${opt}</button>`
+      ).join('') + `</div>`;
+      panel.innerHTML = html + feedbackAndNextHTML();
+      wireChoiceButtons(v.ref);
+    } else {
+      html += `<div class="type-row">
+        <input type="text" id="typeInput" placeholder="e.g. 1 Cor 10:13 or James 4:7-8" autocomplete="off" autocapitalize="off">
+        <button id="submitType">Check</button>
+      </div>`;
+      panel.innerHTML = html + feedbackAndNextHTML();
+      wireTypeInput(v.ref);
+      addRefNote();
+    }
+  } else if (state.direction === 'ref-to-verse') {
+    let html = `<div class="card-ref">${v.ref}</div>` + guessToggleHTML();
+    if (state.mode === 'choice') {
+      const distractors = shuffle(VERSES.filter(x => x.ref !== v.ref && !textsOverlap(x.text, v.text)));
+      const options = shuffle([v, ...distractors.slice(0, 3)]);
+      html += `<div class="options">` + options.map(opt =>
+        `<button class="opt" data-answer="${escapeAttr(opt.text)}">${opt.text}</button>`
+      ).join('') + `</div>`;
+      panel.innerHTML = html + feedbackAndNextHTML();
+      wireChoiceButtons(v.text);
+    } else {
+      html += `<div class="type-row">
+        <input type="text" id="typeInput" placeholder="Type the verse from memory" autocomplete="off">
+        <button id="submitType">Check</button>
+      </div>
+      <div style="font-size:0.78rem;color:var(--ink-soft);margin-top:6px;">Typed mode just reveals the verse for you to self-grade — exact wording isn't scored.</div>`;
+      panel.innerHTML = html + feedbackAndNextHTML();
+      wireTypeInput(null, v.text);
+    }
+  } else {
+    // ref-to-month
+    let html = `<div class="card-ref">${v.ref}</div>` + guessToggleHTML();
+    const correctPair = MONTH_PAIRS.find(p => p.month === v.month);
+    if (state.mode === 'choice') {
+      const distractors = shuffle(MONTH_PAIRS.filter(p => p.month !== v.month)).slice(0, 3);
+      const options = shuffle([correctPair, ...distractors]);
+      html += `<div class="options">` + options.map(opt =>
+        `<button class="opt" data-answer="${escapeAttr(opt.label)}">${opt.label}</button>`
+      ).join('') + `</div>`;
+      panel.innerHTML = html + feedbackAndNextHTML();
+      wireChoiceButtons(correctPair.label);
+    } else {
+      html += `<div class="type-row">
+        <input type="text" id="typeInput" placeholder="${HAS_TOPICS ? 'Month or topic, e.g. October or Spiritual Warfare' : 'Month, e.g. October'}" autocomplete="off">
+        <button id="submitType">Check</button>
+      </div>`;
+      panel.innerHTML = html + feedbackAndNextHTML();
+      wireMonthTypeInput(correctPair);
+    }
+  }
+}
+
+function addRefNote(){
+  const row = document.querySelector('.type-row');
+  if (!row) return;
+  const n = document.createElement('div');
+  n.className = 'type-note';
+  n.textContent = 'Abbreviations and formats are fine \u2014 1 Cor 10:13, 1st Corinthians 10.13, Phil 4:6\u20137, or Eph 6:11 to 12 all work.';
+  row.after(n);
+}
+
+function guessToggleHTML(){
+  return `<label class="guess-label"><input type="checkbox" id="guessBox"> I'm guessing on this one</label>`;
+}
+
+function feedbackAndNextHTML(){
+  return `<div class="feedback" id="feedback"></div><button class="nextbtn" id="nextBtn">Next card</button>`;
+}
+
+function escapeAttr(s){
+  return s.replace(/"/g,'&quot;');
+}
+
+function wireChoiceButtons(correctAnswer){
+  const buttons = document.querySelectorAll('.opt');
+  buttons.forEach(btn => {
+    btn.onclick = () => {
+      if (state.answered) return;
+      state.answered = true;
+      const chosen = btn.dataset.answer;
+      const isCorrect = chosen === correctAnswer;
+      const guessBox = document.getElementById('guessBox');
+      const wasGuess = guessBox ? guessBox.checked : false;
+      buttons.forEach(b => {
+        b.disabled = true;
+        if (b.dataset.answer === correctAnswer) b.classList.add('correct');
+        else if (b === btn) b.classList.add('wrong');
+      });
+      recordAndShowFeedback(isCorrect, correctAnswer, wasGuess);
+    };
+  });
+}
+
+function wireMonthTypeInput(correctPair){
+  const submit = () => {
+    if (state.answered) return;
+    state.answered = true;
+    const input = document.getElementById('typeInput');
+    const val = normalize(input.value);
+    input.disabled = true;
+    document.getElementById('submitType').disabled = true;
+    const guessBox = document.getElementById('guessBox');
+    const wasGuess = guessBox ? guessBox.checked : false;
+
+    const isCorrect = gradeMonthTopic(input.value, correctPair);
+    recordAndShowFeedback(isCorrect, correctPair.label, wasGuess);
+  };
+  document.getElementById('submitType').onclick = submit;
+  document.getElementById('typeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submit();
+  });
+  document.getElementById('typeInput').focus();
+}
+
+function wireTypeInput(correctRef, correctVerseForDisplay){
+  const submit = () => {
+    if (state.answered) return;
+    state.answered = true;
+    const input = document.getElementById('typeInput');
+    const val = input.value;
+    input.disabled = true;
+    document.getElementById('submitType').disabled = true;
+    const guessBox = document.getElementById('guessBox');
+    const wasGuess = guessBox ? guessBox.checked : false;
+
+    if (correctRef !== null) {
+      const g = gradeRef(val, correctRef);
+      recordAndShowFeedback(g.correct, correctRef, wasGuess, g.hint);
+    } else {
+      // ref-to-verse typed mode: self-graded, show the verse
+      showSelfGradeFeedback(correctVerseForDisplay, wasGuess);
+    }
+  };
+  document.getElementById('submitType').onclick = submit;
+  document.getElementById('typeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') submit();
+  });
+  document.getElementById('typeInput').focus();
+}
+
+function showSelfGradeFeedback(verseText, wasGuess){
+  const fb = document.getElementById('feedback');
+  fb.classList.add('show', 'good');
+  fb.innerHTML = `<strong>Actual verse:</strong> ${verseText}<br><br>
+    <button class="opt" id="gradeYes" style="margin-top:6px;">I had it right</button>
+    <button class="opt" id="gradeNo" style="margin-top:6px;">I missed it</button>`;
+  const v = state.queue[state.idx];
+  document.getElementById('gradeYes').onclick = () => {
+    state.score += 1;
+    if (wasGuess) state.flags.push(v);
+    fb.innerHTML = wasGuess ? "Marked correct — noted as a guess for review." : "Marked correct.";
+    document.getElementById('scoreText').textContent = `Score: ${state.score}/${state.idx + 1}`;
+    document.getElementById('nextBtn').classList.add('show');
+  };
+  document.getElementById('gradeNo').onclick = () => {
+    state.misses.push(v);
+    fb.classList.remove('good');
+    fb.classList.add('bad');
+    fb.innerHTML = "Marked as a miss — it'll show up in your review list.";
+    document.getElementById('scoreText').textContent = `Score: ${state.score}/${state.idx + 1}`;
+    document.getElementById('nextBtn').classList.add('show');
+  };
+}
+
+function recordAndShowFeedback(isCorrect, correctAnswer, wasGuess, hint){
+  const v = state.queue[state.idx];
+  const fb = document.getElementById('feedback');
+  fb.classList.add('show');
+  if (isCorrect) {
+    state.score += 1;
+    fb.classList.add('good');
+    fb.textContent = wasGuess ? "Correct — but noted as a guess, so it'll be in your review list." : "Correct.";
+    if (wasGuess) state.flags.push(v);
+  } else {
+    state.misses.push(v);
+    fb.classList.add('bad');
+    fb.textContent = `Not quite. Correct answer: ${correctAnswer}.` + (hint ? ' ' + hint : '');
+  }
+  document.getElementById('scoreText').textContent = `Score: ${state.score}/${state.idx + 1}`;
+  document.getElementById('nextBtn').classList.add('show');
+  document.getElementById('nextBtn').onclick = nextCard;
+}
+
+function nextCard(){
+  state.idx += 1;
+  if (state.idx >= state.queue.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function dedupeByRef(list){
+  const seen = new Set();
+  return list.filter(m => {
+    if (seen.has(m.ref)) return false;
+    seen.add(m.ref);
+    return true;
+  });
+}
+
+function renderReviewList(title, items){
+  if (items.length === 0) return '';
+  let html = `<div class="miss-list"><div class="setup-label">${title}</div>`;
+  items.forEach(m => {
+    html += `<div class="item"><span class="miss-ref">${m.ref}</span> — ${m.text}</div>`;
+  });
+  html += `</div>`;
+  return html;
+}
+
+function showResults(){
+  document.getElementById('quizArea').style.display = 'none';
+  const panel = document.getElementById('resultsPanel');
+  panel.style.display = 'block';
+  const total = state.queue.length;
+  let html = `<div class="sub">Round complete</div><div class="score">${state.score}/${total}</div>`;
+
+  const uniqueMisses = dedupeByRef(state.misses);
+  const uniqueFlags = dedupeByRef(state.flags).filter(f => !uniqueMisses.some(m => m.ref === f.ref));
+
+  if (uniqueMisses.length === 0 && uniqueFlags.length === 0) {
+    html += `<p>Clean round, no guesses noted. Nice.</p>`;
+  } else {
+    html += renderReviewList('Missed', uniqueMisses);
+    html += renderReviewList('Notated as guesses', uniqueFlags);
+  }
+
+  const combined = dedupeByRef([...uniqueMisses, ...uniqueFlags]);
+
+  html += `<div class="actions-row">
+      <button id="reviewMissedBtn" ${uniqueMisses.length === 0 ? 'disabled' : ''}>Drill missed</button>
+      <button id="reviewFlagsBtn" ${uniqueFlags.length === 0 ? 'disabled' : ''}>Drill guesses</button>
+    </div>
+    <div class="actions-row">
+      <button id="reviewCombinedBtn" ${combined.length === 0 ? 'disabled' : ''}>Drill missed + guesses</button>
+      <button class="primary" id="restartBtn">Home</button>
+    </div>`;
+  panel.innerHTML = html;
+
+  document.getElementById('restartBtn').onclick = goHome;
+
+  function launchReview(items){
+    state.queue = shuffle(items);
+    state.idx = 0;
+    state.score = 0;
+    state.misses = [];
+    state.flags = [];
+    panel.style.display = 'none';
+    document.getElementById('quizArea').style.display = 'block';
+    renderQuestion();
+  }
+
+  if (uniqueMisses.length > 0) {
+    document.getElementById('reviewMissedBtn').onclick = () => launchReview(uniqueMisses);
+  }
+  if (uniqueFlags.length > 0) {
+    document.getElementById('reviewFlagsBtn').onclick = () => launchReview(uniqueFlags);
+  }
+  if (combined.length > 0) {
+    document.getElementById('reviewCombinedBtn').onclick = () => launchReview(combined);
+  }
+}
+
+// ---- Drag & drop match mode ----
+let matchState = { pool: [], remaining: 0, wrongRefs: new Set() };
+
+function startMatchMode(){
+  const pool = VERSES.filter(v => state.months.has(v.month));
+  if (pool.length < 2) { alert("Pick at least one month with more than one verse."); return; }
+
+  matchState.pool = pool;
+  matchState.remaining = pool.length;
+  matchState.wrongRefs = new Set();
+
+  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('resultsPanel').style.display = 'none';
+  document.getElementById('matchArea').style.display = 'block';
+
+  const cardsWrap = document.getElementById('matchCards');
+  const shuffledForCards = shuffle(pool);
+  cardsWrap.innerHTML = shuffledForCards.map(v => `
+    <div class="match-card" data-ref="${escapeAttr(v.ref)}">
+      <div class="match-verse-text">${v.text}</div>
+      <div class="drop-zone" data-ref="${escapeAttr(v.ref)}">Drop the reference here</div>
+    </div>
+  `).join('');
+
+  const tray = document.getElementById('chipTray');
+  const shuffledChips = shuffle(pool);
+  tray.innerHTML = '';
+  shuffledChips.forEach(v => {
+    const chip = document.createElement('div');
+    chip.className = 'ref-chip';
+    chip.textContent = v.ref;
+    chip.dataset.ref = v.ref;
+    tray.appendChild(chip);
+    wireDragChip(chip);
+  });
+
+  updateMatchProgress();
+}
+
+function updateMatchProgress(){
+  const total = matchState.pool.length;
+  const done = total - matchState.remaining;
+  document.getElementById('matchProgressText').textContent = `Matched ${done} of ${total}`;
+}
+
+function wireDragChip(chip){
+  let startX = 0, startY = 0, offsetX = 0, offsetY = 0;
+  let currentDropZone = null;
+
+  chip.addEventListener('pointerdown', (e) => {
+    if (chip.classList.contains('placed')) return;
+    chip.setPointerCapture(e.pointerId);
+    const rect = chip.getBoundingClientRect();
+    offsetX = e.clientX - rect.left;
+    offsetY = e.clientY - rect.top;
+    startX = rect.left;
+    startY = rect.top;
+    chip.classList.add('dragging');
+    chip.style.left = startX + 'px';
+    chip.style.top = startY + 'px';
+    chip.style.width = rect.width + 'px';
+  });
+
+  chip.addEventListener('pointermove', (e) => {
+    if (!chip.classList.contains('dragging')) return;
+    e.preventDefault();
+    const left = e.clientX - offsetX;
+    const top = e.clientY - offsetY;
+    chip.style.left = left + 'px';
+    chip.style.top = top + 'px';
+
+    // temporarily hide chip to find element underneath it
+    chip.style.pointerEvents = 'none';
+    const under = document.elementFromPoint(e.clientX, e.clientY);
+    chip.style.pointerEvents = '';
+    const zone = under ? under.closest('.drop-zone') : null;
+
+    if (zone !== currentDropZone) {
+      if (currentDropZone) currentDropZone.classList.remove('hover-target');
+      currentDropZone = zone;
+      if (currentDropZone && !currentDropZone.classList.contains('filled')) {
+        currentDropZone.classList.add('hover-target');
+      }
+    }
+  });
+
+  chip.addEventListener('pointerup', (e) => {
+    if (!chip.classList.contains('dragging')) return;
+    chip.classList.remove('dragging');
+    chip.style.left = '';
+    chip.style.top = '';
+    chip.style.width = '';
+    if (currentDropZone) currentDropZone.classList.remove('hover-target');
+
+    chip.style.pointerEvents = 'none';
+    const under = document.elementFromPoint(e.clientX, e.clientY);
+    chip.style.pointerEvents = '';
+    const zone = under ? under.closest('.drop-zone') : null;
+    currentDropZone = null;
+
+    if (!zone || zone.classList.contains('filled')) return;
+
+    if (zone.dataset.ref === chip.dataset.ref) {
+      zone.textContent = chip.dataset.ref;
+      zone.classList.add('filled');
+      chip.classList.add('placed');
+      matchState.remaining -= 1;
+      updateMatchProgress();
+      if (matchState.remaining === 0) {
+        setTimeout(showMatchComplete, 300);
+      }
+    } else {
+      matchState.wrongRefs.add(zone.dataset.ref);
+      zone.classList.add('wrong-flash');
+      setTimeout(() => zone.classList.remove('wrong-flash'), 400);
+    }
+  });
+}
+
+function showMatchComplete(){
+  const cardsWrap = document.getElementById('matchCards');
+  const wrongCount = matchState.wrongRefs.size;
+  const summary = document.createElement('div');
+  summary.className = 'panel match-complete';
+  summary.innerHTML = `
+    <div class="score">✓</div>
+    <p>All ${matchState.pool.length} matched${wrongCount > 0 ? `, ${wrongCount} took more than one try` : ' on the first try'}.</p>
+    <div class="actions-row">
+      <button id="matchRetryBtn">Shuffle &amp; retry</button>
+      <button class="primary" id="matchDoneBtn">Home</button>
+    </div>
+  `;
+  cardsWrap.appendChild(summary);
+  document.getElementById('matchRetryBtn').onclick = startMatchMode;
+  document.getElementById('matchDoneBtn').onclick = goHome;
+}
+
+// ---- Offline support (service worker) ----
+if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
